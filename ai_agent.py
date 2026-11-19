@@ -10,6 +10,13 @@ from google.genai import types
 # CONFIGURAÇÃO DO AGENTE
 load_dotenv()
 chave_api = os.getenv("GEMINI_API_KEY")
+
+if not chave_api:
+    try:
+        import streamlit as st
+        chave_api = st.secrets.get("GEMINI_API_KEY")
+    except Exception:
+        pass
 if not chave_api:
     raise ValueError("GEMINI_API_KEY não encontrada. Configure .env ou Streamlit Secrets.")
 
