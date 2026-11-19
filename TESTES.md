@@ -7,12 +7,19 @@ Este documento apresenta os testes funcionais do protótipo Branddi Ops AI, dese
 Os resultados distinguem evidências observadas na interface, simulações controladas de falha e limitações ainda não validadas.
 
 **Critérios de aceitação:**
+
 - Cálculos determinísticos e matematicamente coerentes.
+
 - Tratamento de entradas inválidas.
+
 - Revisão e registro de decisões humanas.
+
 - Continuidade do simulador quando o LLM estiver indisponível.
+
 - Separação dos indicadores de N1 e N2.
+
 - Nenhuma implementação operacional automática.
+
 - Preservação das metas de SLA ≥ 90% e qualidade ≥ 97% no piloto.
 
 Os limites de SLA e qualidade são critérios para avaliação futura, não resultados comprovados pelo protótipo.
@@ -22,18 +29,29 @@ Os limites de SLA e qualidade são critérios para avaliação futura, não resu
 ### T1 — Cenário padrão: capacidade operacional N2
 
 **Entrada:**
+
 - 9 analistas.
+
 - 40 horas semanais por analista.
+
 - Disponibilidade produtiva de 65%.
+
 - 3 ações por caso.
+
 - 12 minutos por ação.
+
 - Demanda de 420 casos/semana.
+
 - Fila inicial de 180 casos.
 
 **Resultado esperado:**
+
 - Capacidade semanal: 390 casos.
+
 - Utilização: 107,69%.
+
 - Déficit: 30 casos/semana.
+
 - Fila projetada após uma semana: 210 casos.
 
 **Resultado observado:**
@@ -79,9 +97,13 @@ Justificativa: revisar o dimensionamento do N2 antes de qualquer implementação
 Responsável: identificação de teste T3.
 
 **Resultado esperado:**
+
 - Registrar decisão, justificativa e responsável.
+
 - Associar a decisão aos parâmetros operacionais.
+
 - Exibir o registro no histórico.
+
 - Não executar mudanças operacionais automaticamente.
 
 **Resultado observado:**
@@ -91,13 +113,21 @@ A aplicação apresentou:
 "Decisão registrada com sucesso! Registro nº 1."
 
 O histórico exibiu um registro contendo:
+
 - ID: 1.
+
 - Decisão: Solicitar ajustes.
+
 - Justificativa informada.
+
 - Responsável identificado.
+
 - Capacidade semanal: 390.
+
 - Demanda semanal: 420.
+
 - Fila inicial: 180.
+
 - Prazo: 4 semanas.
 
 **Situação: APROVADO — Registro e consulta observados na sessão.**
@@ -123,9 +153,13 @@ A falha deve ser detectada pelo script de teste sem necessidade de indisponibili
 O terminal apresentou:
 
 ```text
+
 TESTE T4 - INDISPONIBILIDADE DO GEMINI
+
 Indisponibilidade detectada: Falha simulada: API Gemini indisponivel
+
 A chamada da IA falhou de forma controlada no teste.
+
 ```
 
 **Procedimento 2 — Teste de integração local:**
@@ -133,8 +167,11 @@ A chamada da IA falhou de forma controlada no teste.
 No ambiente local, a chamada `analisar_operacao(dados_para_ia)` foi substituída temporariamente por uma exceção `ConnectionError`, para verificar o tratamento de erro existente no `app.py`.
 
 **Resultado esperado:**
+
 - Apresentar mensagem de erro compreensível.
+
 - Manter os cálculos operacionais disponíveis.
+
 - Não executar decisões automaticamente.
 
 **Resultado observado:**
@@ -144,11 +181,17 @@ A aplicação Streamlit apresentou:
 "Não foi possível consultar o Gemini. Verifique a conexão ou tente novamente. Os cálculos operacionais continuam disponíveis."
 
 Os resultados de recuperação permaneceram visíveis:
+
 - Fila acumulada: 180 casos.
+
 - Capacidade necessária: 465 casos/semana.
+
 - Prazo: 4 semanas.
+
 - Analistas adicionais: 2.
+
 - Redução do tempo médio: 16,13%.
+
 - Casos para automatizar: 75 por semana.
 
 **Restauração:**
@@ -166,26 +209,36 @@ Uma nova execução local gerou o diagnóstico executivo completo, demonstrando 
 **Entrada:**
 
 Crescimento de 20% na demanda semanal:
+
 - N1: 800 para 960 casos.
+
 - N2: 420 para 504 casos.
 
 Equipe proposta:
+
 - N1: 7 analistas, 1,8 ação/caso e 5 minutos/ação.
+
 - N2: 7 analistas, 3 ações/caso e 9 minutos/ação.
 
 Disponibilidade produtiva: 65%.
 
 **Resultado esperado:**
+
 - Capacidade N1: 1.213,33 casos/semana.
+
 - Utilização N1: 79,12%.
+
 - Capacidade N2: 404,44 casos/semana.
+
 - Utilização N2: 124,62%.
+
 - Déficit N2: aproximadamente 99,56 casos/semana.
-- Fila N2 após uma semana: aproximadamente 280 casos.
+
+- Fila N2 após uma semana: 279,56 casos (projeção teórica; aproximadamente 280 casos inteiros).
 
 **Resultado observado:**
 
-As capturas da aplicação apresentaram os indicadores de capacidade e utilização de N1 e N2 separadamente, incluindo a fila projetada do N2.
+As capturas da aplicação apresentaram os indicadores de capacidade e utilização de N1 e N2 separadamente, incluindo a fila projetada do N2. Após a atualização de formatação do `app.py`, a capacidade e a fila projetada são exibidas com duas casas decimais. A captura do reteste do simulador em 19/11/2026 confirmou os valores de capacidade (404.44), utilização (124.62%) e saldo (-99.56) para os parâmetros equivalentes ao N2 futuro; essa captura não constitui novo teste visual de todas as quatro seções fixas N1/N2.
 
 **Situação: APROVADO — Observação visual e conferência matemática.**
 
@@ -194,9 +247,13 @@ As capturas da aplicação apresentaram os indicadores de capacidade e utilizaç
 ### T6 — Plano de recuperação da fila N2
 
 **Entrada:**
+
 - Capacidade atual: 390 casos/semana.
+
 - Demanda: 420 casos/semana.
+
 - Fila inicial: 180 casos.
+
 - Prazo: 4 semanas.
 
 **Resultado esperado:**
@@ -206,8 +263,11 @@ Capacidade necessária:
 420 + (180 / 4) = 465 casos/semana.
 
 Alternativas independentes:
+
 - Adicionar 2 analistas.
+
 - Reduzir o tempo médio em aproximadamente 16,13%.
+
 - Automatizar 75 casos/semana.
 
 **Resultado observado:**
@@ -225,20 +285,31 @@ A aplicação apresentou capacidade necessária de 465 casos/semana e as três a
 Dados estruturados da operação N2, incluindo capacidade, demanda, déficit, fila acumulada, prazo e alternativas de recuperação.
 
 **Resultado esperado:**
+
 - Diagnóstico executivo estruturado em seis seções.
+
 - Indicadores consistentes com o simulador.
+
 - Recomendações condicionadas à viabilidade.
+
 - Ausência de execução operacional automática.
+
 - Declaração padronizada sobre a origem dos indicadores.
 
 **Resultado observado:**
 
 O Gemini produziu diagnóstico contendo:
+
 1. Diagnóstico executivo.
+
 2. Principais riscos.
+
 3. Recomendações priorizadas.
+
 4. Plano de recuperação.
+
 5. Indicadores de acompanhamento.
+
 6. Decisão gerencial.
 
 Os valores principais foram compatíveis com os cálculos do simulador.
@@ -282,7 +353,7 @@ Fila inicial: 180 casos.
 
 **N2 proposto com demanda +20%, após uma semana:**
 
-180 + 504 - 404,44 ≈ 280 casos.
+180 + 504 - 404,444... = 279,555... ≈ 279,56 casos (aproximadamente 280 casos inteiros).
 
 **N2 proposto com demanda +20%, após quatro semanas:**
 
@@ -294,13 +365,13 @@ N1 e N2 são calculados separadamente. Os casos transferidos entre níveis não 
 
 ## 4. Comparação antes/depois e esforço humano residual
 
-**Amostra cronometrada de tarefas manuais versus assistidas: n = 0.**
+**Amostra exploratória cronometrada: um cenário comparado, com uma execução manual e uma assistida (n = 1 par).**
 
-Não foi realizada medição pareada de tempo, esforço humano residual, retrabalho ou qualidade operacional.
+O teste exploratório original registrou tempos informados de 8 segundos (manual) e 3 segundos (assistido), com diferença relativa de 62,5% nesta execução. A utilização manual foi inicialmente informada como razão de 1,24, em vez de percentual. Na execução original, o aplicativo exibia capacidade e saldo em números inteiros. Em 19/11/2026, a regra foi verificada em `capacity.py` e `app.py`: o cálculo utiliza valores sem arredondamento intermediário, `capacity.py` retorna indicadores arredondados a duas casas e `app.py` agora os exibe com duas casas decimais. O reteste de exibição não foi cronometrado e não altera a medição original.
 
-Portanto, não existe percentual de produtividade real comprovado.
+**Não há comprovação de ganho líquido de produtividade operacional, redução de retrabalho ou esforço humano residual em produção.** A cronometragem foi manual, não controlada e limitada a uma execução por método. Detalhes e limitações constam na Seção 8.
 
-A comparação disponível representa cenários teóricos:
+Além desse teste exploratório, a comparação de dimensionamento abaixo representa cenários teóricos:
 
 | Indicador | N2 atual | N2 proposto |
 |---|---:|---:|
@@ -320,11 +391,17 @@ O ganho hipotético considera exclusivamente a redução de tempo por ação, ma
 Selecionar amostras comparáveis por tipo e complexidade de chamado.
 
 Registrar:
+
 - Quantidade de casos avaliados.
+
 - Tempo total de execução manual.
+
 - Tempo total de execução assistida.
+
 - Tempo de revisão humana.
+
 - Correções e retrabalho.
+
 - Qualidade das entregas.
 
 Calcular o ganho líquido incluindo o esforço humano residual.
@@ -340,33 +417,52 @@ Não extrapolar resultados de amostras pequenas para toda a operação.
 | Entrada inválida no tempo médio | Restrição `min_value=1` no Streamlit | T2 validado |
 | Necessidade de registrar decisão humana | Formulário e histórico SQLite | T3 validado na sessão |
 | Indisponibilidade do Gemini | Tratamento de exceção no `app.py` | T4 validado com falha simulada e restauração |
+| Exibição de capacidade e saldo sem casas decimais | Formatação `:.0f` alterada para `:.2f` no simulador e nos indicadores de capacidade e fila dos cenários N1/N2 | Reteste visual em 19/11/2026: 404.44, 124.62% e -99.56 no simulador |
 
 ## 6. Critérios para seguir, revisar ou interromper
 
 **Seguir para piloto controlado quando:**
+
 - Os cálculos forem consistentes.
+
 - A revisão humana estiver funcional.
+
 - As exceções forem tratadas.
+
 - As integrações simuladas estiverem identificadas.
+
 - Existirem responsáveis definidos para aprovação e acompanhamento.
 
 **Revisar a solução quando:**
+
 - A IA produzir recomendações inconsistentes.
+
 - O esforço de revisão eliminar o ganho operacional.
+
 - A automação transferir trabalho indevidamente do N1 para o N2.
+
 - Os tempos de execução projetados não forem alcançados.
 
 **Interromper a automação quando:**
+
 - Houver risco de descumprimento de SLA ou qualidade.
+
 - Forem identificadas decisões incorretas com impacto operacional.
+
 - Ocorrer falha de rastreabilidade ou perda de histórico.
+
 - Não existir mecanismo seguro de reversão.
 
 Metas do piloto:
+
 - SLA ≥ 90%.
+
 - Qualidade ≥ 97%.
+
 - Sem horas extras.
+
 - Preservação da revisão humana.
+
 - Monitoramento da capacidade, fila e esforço humano residual.
 
 Esses critérios são propostos para uma operação real e ainda não foram validados com dados de produção.
@@ -380,12 +476,113 @@ A integração com a API Gemini é real, mas a falha T4 foi induzida artificialm
 O armazenamento SQLite utilizado no Streamlit Community Cloud pode ser efêmero. A persistência após reinicializações não foi comprovada.
 
 Não foram realizados testes de:
+
 - Carga simultânea e desempenho sob alto volume de usuários.
+
 - Segurança de acesso e autenticação.
+
 - Durabilidade de registros após reinicialização.
+
 - Qualidade estatística das recomendações em amostras extensas.
+
 - Ganho líquido de produtividade com casos reais.
 
 Nenhuma alteração foi executada em pessoas, acessos ou sistemas operacionais reais.
 
 A evolução para produção dependeria de integração com os sistemas corporativos, banco de dados persistente, controle de acesso, monitoramento, tratamento de exceções e validação de Tecnologia, Produto e Operações.
+
+## 8. Teste comparativo — ganho verificável
+
+### 8.1. Objetivo
+
+Comparar a execução manual de cálculos de capacidade operacional com a execução assistida pelo Branddi Ops AI, utilizando os mesmos dados fictícios. A avaliação considera tempo informado pelo operador, resultados numéricos e necessidade de correção humana.
+
+### 8.2. Condições do teste
+
+- Data: 19/11/2026.
+
+- Executor: candidato responsável pelo protótipo.
+
+- Execução manual: Calculadora do Windows e Notepad++.
+
+- Execução assistida: Branddi Ops AI, em ambiente local Streamlit.
+
+- Cronometragem: manual, em segundos, informada pelo executor.
+
+- Amostra: um cenário comparativo completo, com uma execução por método.
+
+- Limitação: teste exploratório, não controlado, sem repetição estatística e com conhecimento prévio das fórmulas.
+
+### 8.3. Cenário comparado — N2 projetado com crescimento de 20%
+
+Entradas:
+
+- Analistas: 7.
+
+- Horas por dia: 8.
+
+- Dias por semana: 5.
+
+- Disponibilidade produtiva: 65%.
+
+- Ações por caso: 3.
+
+- Tempo por ação: 9 minutos.
+
+- Tempo médio por caso: 27 minutos.
+
+- Demanda semanal: 504 casos.
+
+Resultados matemáticos esperados:
+
+- Capacidade semanal: 404,444... casos.
+
+- Utilização: 124,615...%, exibida como 124,62%.
+
+- Saldo teórico: -99,555... casos.
+
+### 8.4. Resultados observados
+
+| Indicador | Execução manual | Branddi Ops AI |
+|---|---|---|
+| Capacidade semanal | 404,44 casos | 404 casos (execução cronometrada original) |
+| Utilização | 1,24 inicialmente; valor correto de referência: 124,62% | 124,62% |
+| Saldo de capacidade | -99,56 casos | -100 casos (execução cronometrada original) |
+| Tempo total informado | 8 segundos | 3 segundos |
+| Correção humana identificada | Conversão da razão de utilização para percentual | Nenhuma correção relatada |
+
+Os números inteiros na tabela representam a **interface na execução cronometrada original**, antes da alteração visual. A revisão do código confirmou que `capacity.py` calcula a capacidade, a utilização e o saldo sem arredondamentos intermediários, retornando os três valores com `round(..., 2)`. O `app.py` original formatava capacidade e saldo com `:.0f`; a versão revisada utiliza `:.2f`. O reteste visual em 19/11/2026 confirmou **404.44 casos**, **124.62%** e **-99.56 casos** no simulador, com o alerta de demanda acima da capacidade. Não houve nova cronometragem após a alteração.
+
+### 8.5. Ganho observado e limitações
+
+Diferença de tempo informada: 8 - 3 = 5 segundos.
+
+Redução relativa observada: (8 - 3) / 8 × 100 = 62,5%.
+
+Esse percentual descreve somente as duas execuções relatadas neste teste. Não constitui comprovação de aumento de produtividade operacional, redução de esforço humano em produção ou retorno financeiro. A amostra é de apenas uma execução por método, com cronometragem manual, tempos muito curtos e possível diferença de escopo entre as tarefas realizadas. A mudança posterior de formatação não foi incluída na medição de tempo.
+
+O resultado evidencia que o aplicativo reproduziu o percentual esperado e sinalizou o déficit operacional. Na execução manual, a utilização foi inicialmente informada como razão, exigindo correção interpretativa. O esforço humano de revisão de diagnósticos com IA não foi medido.
+
+### 8.6. Evidências, decisão e próximos passos
+
+Evidências observadas:
+
+- Capturas de tela do simulador com entradas e resultados, incluindo o reteste visual de 19/11/2026 com 404.44, 124.62% e -99.56.
+
+- Tempos e resultados manuais informados pelo executor durante a sessão de teste.
+
+- Comparação documentada nesta seção.
+
+Decisão: resultado exploratório favorável à continuidade da validação; insuficiente para comprovar ganho de produtividade em escala.
+
+Próximas validações:
+
+1. Verificar no código a regra de arredondamento de capacidade e saldo.
+
+2. Repetir o experimento com múltiplos cenários e cronometração integral equivalente.
+
+3. Registrar separadamente tempo de entrada, cálculo, revisão e correção.
+
+4. Avaliar o esforço humano residual no diagnóstico gerado com IA.
+
+5. Não extrapolar resultados do protótipo para SLA, qualidade, redução de equipe ou produtividade da operação real.

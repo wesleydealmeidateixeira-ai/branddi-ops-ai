@@ -97,7 +97,7 @@ col_a, col_b, col_c = st.columns(3)
 with col_a:
     st.metric(
         "Capacidade Semanal",
-        f"{resultado['capacidade_semanal']:.0f} casos"
+        f"{resultado['capacidade_semanal']:.2f} casos"
     )
 
 with col_b:
@@ -109,7 +109,7 @@ with col_b:
 with col_c:
     st.metric(
         "Saldo de Capacidade",
-        f"{resultado['saldo_capacidade']:.0f} casos"
+        f"{resultado['saldo_capacidade']:.2f} casos"
     )
 
 if resultado["saldo_capacidade"] < 0:
@@ -155,7 +155,7 @@ for nome, dados in cenarios_operacionais.items():
     with c1:
         st.metric(
             "Capacidade Semanal",
-            f"{resultado_cenario['capacidade_semanal']:.0f}"
+            f"{resultado_cenario['capacidade_semanal']:.2f}"
         )
 
     with c2:
@@ -167,7 +167,7 @@ for nome, dados in cenarios_operacionais.items():
     with c3:
         st.metric(
             "Fila Projetada",
-            f"{resultado_cenario['fila_final']:.0f}"
+            f"{resultado_cenario['fila_final']:.2f}"
         )
 
     if resultado_cenario["saldo_capacidade"] < 0:
