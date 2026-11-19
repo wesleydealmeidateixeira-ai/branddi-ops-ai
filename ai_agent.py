@@ -26,7 +26,7 @@ cliente = genai.Client(
     http_options=types.HttpOptions(timeout=30000)
 )
 
-MODELO = "gemini-3.1-flash-lite"
+MODELO = "gemini-2.5-flash"
 
 FRASE_VALIDACAO = (
     "Os indicadores apresentados foram fornecidos pela "
