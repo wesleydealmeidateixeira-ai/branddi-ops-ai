@@ -1,3 +1,4 @@
+import logging
 
 import streamlit as st
 from capacity import calcular_capacidade
@@ -371,7 +372,12 @@ if st.button(
                     "O Gemini não retornou um diagnóstico."
                 )
 
-        except Exception:
+        except Exception as erro:
+            logging.error(
+                "Falha na consulta ao Gemini (%s)",
+                type(erro).__name__,
+                exc_info=True
+            )
             st.error(
                 "Não foi possível consultar o Gemini. "
                 "Verifique a conexão ou tente novamente. "
